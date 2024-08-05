@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './modules/home/home.component';
+import { RegiaoComponent } from './modules/regiao/regiao.component';
+import { RegionListComponent } from './region-list/region-list.component';
 
 const routes: Routes = [
   {
@@ -14,7 +16,11 @@ const routes: Routes = [
   },
   {
     path: 'regiao',
-    loadChildren: () => import('./modules/regiao/regiao.module').then(m => m.RegiaoModule)
+    component: RegiaoComponent
+  },
+  {
+    path: 'regiao-list',
+    component: RegionListComponent
   },
   { 
     path: '**', 

@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { RegiaoComponent } from './regiao.component';
-import { RegiaoRoutingModule } from './regiao.routing';
 
 @NgModule({
+  declarations: [
+    RegiaoComponent
+  ],
   imports: [
     CommonModule,
-    RegiaoRoutingModule
+    ReactiveFormsModule
   ],
-  declarations: [RegiaoComponent],
-  exports: [RegiaoComponent]
+  exports: [
+    RegiaoComponent
+  ]
 })
 export class RegiaoModule { }

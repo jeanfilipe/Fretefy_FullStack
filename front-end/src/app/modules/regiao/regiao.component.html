@@ -1,3 +1,35 @@
-<p>
-  regiao works!
-</p>
+<form [formGroup]="regionForm" (ngSubmit)="onSubmit()">
+  <label for="regionName">Nome da Região:</label>
+  <input id="regionName" formControlName="regionName" type="text">
+  <div *ngIf="regionForm.get('regionName').invalid && regionForm.get('regionName').touched">
+    O nome da região é obrigatório.
+  </div>
+<br>
+  <label for="state">Estado:</label>
+  <select id="state" formControlName="state" (change)="loadCities()">
+    <option *ngFor="let state of states" [value]="state.id">{{ state.Nome }}</option>
+  </select>
+  <div *ngIf="regionForm.get('state').invalid && regionForm.get('state').touched">
+    O estado é obrigatório.
+  </div>
+  <br>
+  <label for="cities">Cidades:</label>
+  
+  <div formArrayName="cities">
+    <div *ngFor="let city of citiesArray.controls; let i = index">
+      <span>{{ city.value }}</span>
+      <button type="button" (click)="removeCity(i)">Remover</button>
+    </div>
+  </div>
+  <div *ngIf="citiesArray.invalid && regionForm.get('cities').touched">
+    Pelo menos uma cidade é obrigatória.
+  </div>
+  
+  <input type="text" placeholder="Adicionar cidade" #cityInput>
+  
+  <button type="button" (click)="addCity(cityInput.value); cityInput.value=''">Adicionar</button>
+  <br>
+
+  <button type="submit" [disabled]="regionForm.invalid">Salvar</button>
+  <button type="button" (click)="regionForm.reset()">Cancelar</button>
+</form>

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { RegionService } from '../../region.service';  // Certifique-se de que o caminho está correto
+import { RegionService } from '../region.service';
 
 @Component({
-  selector: 'app-regiao',
-  templateUrl: './regiao.component.html',
-  styleUrls: ['./regiao.component.scss']
+  selector: 'app-region-form',
+  templateUrl: './region-form.component.html',
+  styleUrls: ['./region-form.component.scss']
 })
-export class RegiaoComponent implements OnInit {
+export class RegionFormComponent implements OnInit {
   regionForm: FormGroup;
   states = [];
   cities = [];
@@ -35,7 +35,7 @@ export class RegiaoComponent implements OnInit {
   }
 
   loadCities() {
-    this.regionService.getCities("pr").subscribe(data => {
+    this.regionService.getCities("PR").subscribe(data => {
       this.cities = data;
     });
   }

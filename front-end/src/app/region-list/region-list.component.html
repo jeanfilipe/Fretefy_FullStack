@@ -1,0 +1,23 @@
+<!-- src/app/region-list/region-list.component.html -->
+<h2>Regiões</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let region of regions">
+      <td>{{ region.Id }}</td>
+      <td>{{ region.Name }}</td>
+      <td>
+        <button [routerLink]="['/region', region.Id]">Detalhes</button>
+        <button (click)="toggleActive(region)">
+          {{ region.Ativo === 'Ativo' ? 'Desativar' : 'Ativar' }}
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
