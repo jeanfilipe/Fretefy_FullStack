@@ -9,56 +9,54 @@ import { RegionService } from '../region.service';
 })
 export class RegionFormComponent implements OnInit {
   regionForm: FormGroup;
-  states = [];
-  cities = [];
-  selectedCities = new Set();
+  states: any[] = [];
+  availableCities: any[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private regionService: RegionService
-  ) {}
+  constructor(private fb: FormBuilder, private regionService: RegionService) { }
 
   ngOnInit(): void {
     this.regionForm = this.fb.group({
       regionName: ['', [Validators.required]],
       state: ['', [Validators.required]],
-      cities: this.fb.array([], Validators.required)
+      cities: this.fb.array([], [Validators.required])
     });
 
     this.loadStates();
-  }
-
-  loadStates() {
-    this.regionService.getStates().subscribe(data => {
-      this.states = data;
-    });
-  }
-
-  loadCities() {
-    this.regionService.getCities("PR").subscribe(data => {
-      this.cities = data;
-    });
-  }
-
-  addCity(city) {
-    if (!this.selectedCities.has(city)) {
-      this.selectedCities.add(city);
-      this.citiesArray.push(this.fb.control(city, Validators.required));
-    }
-  }
-
-  removeCity(index: number) {
-    this.selectedCities.delete(this.citiesArray.at(index).value);
-    this.citiesArray.removeAt(index);
   }
 
   get citiesArray(): FormArray {
     return this.regionForm.get('cities') as FormArray;
   }
 
-  onSubmit() {
+  loadStates(): void {
+    this.regionService.getStates().subscribe((data: any) => {
+      this.states = data;
+    });
+  }
+
+  loadCities(): void {
+    debugger;
+    const selectedState = this.regionForm.get('state').value;
+    this.regionService.getCities(selectedState).subscribe((data: any) => {
+      this.availableCities = data;
+    });
+  }
+
+  addCity(cityId: string): void {
+    const cityName = this.availableCities.find(city => city.id === cityId)?.nome;
+    if (cityName && !this.citiesArray.controls.some(control => control.value === cityName)) {
+      this.citiesArray.push(this.fb.control(cityName));
+    }
+  }
+
+  removeCity(index: number): void {
+    this.citiesArray.removeAt(index);
+  }
+
+  onSubmit(): void {
     if (this.regionForm.valid) {
       console.log(this.regionForm.value);
+      // Lógica para enviar os dados para o backend
     }
   }
 }

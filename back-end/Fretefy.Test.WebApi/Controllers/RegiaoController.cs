@@ -1,7 +1,11 @@
-﻿using Fretefy.Test.Domain.Entities;
+﻿using Fretefy.Test.Domain.DTO;
+using Fretefy.Test.Domain.Entities;
 using Fretefy.Test.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fretefy.Test.WebApi.Controllers
 {
@@ -33,10 +37,24 @@ namespace Fretefy.Test.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Regiao regiao)
+        [Route("create")]
+        public async Task<IActionResult> Create([FromBody] CreateDto regiao)
         {
-            _regiaoService.AddRegiao(regiao);
-            return CreatedAtAction(nameof(GetById), new { id = regiao.Id }, regiao);
+            if(_regiaoService.RegiaoExiste(regiao.RegionName))
+            { 
+                return BadRequest("Regiao já cadastrada");
+            }
+
+
+            var _regiao = new Regiao() { Ativo = "Ativo", Name = regiao.RegionName };
+            _regiao.CidadeRegioes = new List<CidadeRegiao>();
+            foreach (var item in regiao.cities)
+            {
+                _regiao.CidadeRegioes.Add(new CidadeRegiao() { NomeCidade = item });
+            }
+
+            _regiaoService.AddRegiao(_regiao);
+            return CreatedAtAction(nameof(GetById), new { id = _regiao.Id }, _regiao);
         }
 
         [HttpPut("{id}")]

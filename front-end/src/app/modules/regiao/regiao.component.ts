@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { RegionService } from '../../region.service';  // Certifique-se de que o caminho está correto
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-regiao',
@@ -11,12 +12,13 @@ export class RegiaoComponent implements OnInit {
   regionForm: FormGroup;
   states = [];
   cities = [];
-  selectedCities = new Set();
+  availableCities: any[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private regionService: RegionService
-  ) {}
+    private regionService: RegionService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.regionForm = this.fb.group({
@@ -35,20 +37,19 @@ export class RegiaoComponent implements OnInit {
   }
 
   loadCities() {
-    this.regionService.getCities("pr").subscribe(data => {
+    this.regionService.getCities(this.regionForm.value.state).subscribe(data => {
       this.cities = data;
     });
   }
 
-  addCity(city) {
-    if (!this.selectedCities.has(city)) {
-      this.selectedCities.add(city);
-      this.citiesArray.push(this.fb.control(city, Validators.required));
+  addCity(cityId: string): void {
+
+    if (!this.citiesArray.controls.find(control => control.value == cityId)) {
+      this.citiesArray.push(this.fb.control(cityId));
     }
   }
 
   removeCity(index: number) {
-    this.selectedCities.delete(this.citiesArray.at(index).value);
     this.citiesArray.removeAt(index);
   }
 
@@ -56,9 +57,30 @@ export class RegiaoComponent implements OnInit {
     return this.regionForm.get('cities') as FormArray;
   }
 
-  onSubmit() {
+  showMessage(message: string) {
+    alert(message);
+  }
+
+  async onSubmit() {
     if (this.regionForm.valid) {
-      console.log(this.regionForm.value);
+      try {
+        let retorno = await this.regionService.postRegiao(this.regionForm.value).toPromise();
+
+        // Navega para a lista de regiões após um breve atraso
+        setTimeout(() => {
+          this.router.navigate(['/regiao-list']);
+        }, 3000);
+
+        console.log(this.regionForm.value);
+
+      } catch (error) {
+        // Trata o erro e exibe uma mensagem na tela
+        if (error.message.includes('400')) {
+          this.showMessage('O item já existe.');
+        } else {
+          this.showMessage('O item já existe.');
+        }
+      }
     }
   }
 }

@@ -10,7 +10,7 @@ namespace Fretefy.Test.Domain.Interfaces.Repositories
         void UpdateRegiao(Regiao regiao);
         Regiao GetRegiaoById(int id);
         IEnumerable<Regiao> GetAllRegioes();
-
+        bool RegiaoExiste(string nome);
         void StatusUpdate(int id, string status);
     }
 }

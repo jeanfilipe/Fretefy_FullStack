@@ -19,6 +19,7 @@ namespace Fretefy.Test.Domain.Services
         public void AddRegiao(Regiao regiao)
         {
             _regiaoRepository.AddRegiao(regiao);
+            
         }
 
         public void DeleteRegiao(int id)
@@ -44,6 +45,11 @@ namespace Fretefy.Test.Domain.Services
         public void StatusUpdate(int id, string status)
         {
             _regiaoRepository.StatusUpdate(id, status);
+        }
+
+        public bool RegiaoExiste(string nome)
+        {
+            return _regiaoRepository.RegiaoExiste(nome);
         }
     }
 }

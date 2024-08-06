@@ -16,11 +16,31 @@ namespace Fretefy.Test.Infra.EntityFramework.Repositories
             _appDbContext = appDbContext;
         }
 
+
+        public bool RegiaoExiste(string nome)
+        {
+            var obj = _appDbContext.Regioes.Where(x=>x.Name == nome).FirstOrDefault();
+            if(obj != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
         // INSERT
         public void AddRegiao(Regiao regiao)
         {
-            _appDbContext.Regioes.Add(regiao);
-            _appDbContext.SaveChanges();
+            try
+            {
+                _appDbContext.Regioes.Add(regiao);
+                _appDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+           
         }
 
         // DELETE

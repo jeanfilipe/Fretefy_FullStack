@@ -8,6 +8,8 @@ namespace Fretefy.Test.Domain.Entities
     {
         public int Id { get; set; }
         public string NomeCidade { get; set; }
+
+        public int RegioesId { get; set; }
         public Regiao Regioes { get; set; }
     }
 }
